@@ -408,6 +408,7 @@ key_callback :: proc "c" (window: glfw.Window_Handle, key, scancode, action, mod
 	case .Menu_Main:
 		if action == glfw.PRESS {
 			game_state = .Game;
+			start_new_game();
 		}
 
 	case .Game:
@@ -443,6 +444,7 @@ key_callback :: proc "c" (window: glfw.Window_Handle, key, scancode, action, mod
 		case:
 			if action == glfw.PRESS {
 				game_state = .Game;
+				start_new_game();
 			}
 		}
 	}
