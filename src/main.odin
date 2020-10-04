@@ -87,6 +87,13 @@ prev_time: f64;
 curr_time: f64;
 
 
+default_context :: proc "contextless" () -> runtime.Context {
+	context = runtime.default_context();
+	context.assertion_failure_proc = assertion_failure_proc;
+	return context;
+}
+
+
 render_draw_list :: proc(window: glfw.Window_Handle, dl: ^Draw_List, w, h: f32) {
 	aspect_ratio := f32(max(w, 1))/f32(max(h, 1));
 
@@ -403,7 +410,7 @@ start_new_game :: proc() {
 
 
 key_callback :: proc "c" (window: glfw.Window_Handle, key, scancode, action, mods: i32) {
-	context = runtime.default_context();
+	context = default_context();
 
 	switch game_state {
 	case .Menu_Main:
@@ -453,7 +460,7 @@ key_callback :: proc "c" (window: glfw.Window_Handle, key, scancode, action, mod
 
 
 framebuffer_size_callback :: proc "c" (window: glfw.Window_Handle, width, height: i32) {
-	context = runtime.default_context();
+	context = default_context();
 
 	// Freeze game logic
 	curr_time = glfw.GetTime();
@@ -641,7 +648,37 @@ draw_scene :: proc(window: glfw.Window_Handle, dl: ^Draw_List, w, h: f32) {
  	render_draw_list(window, dl, w, h);
 }
 
+foreign import user32 "system:User32.lib"
+@(default_calling_convention="std")
+foreign user32 {
+	MessageBoxA :: proc(hWnd: rawptr, text: cstring, caption: cstring, utype: u32) -> i32 ---
+}
+
+assertion_failure_proc :: proc(prefix, message: string, loc := #caller_location) {
+
+
+	runtime.print_caller_location(loc);
+	runtime.print_string(" ");
+	runtime.print_string(prefix);
+	if len(message) > 0 {
+		runtime.print_string(": ");
+		runtime.print_string(message);
+	}
+	runtime.print_byte('\n');
+
+	MessageBoxA(nil,
+	            "An internal error occured. You may need to update your graphics drivers.\nThis game requires OpenGL 4.5",
+	            "Hyperbolic Assertion Error",
+	            0x41010);
+	os.exit(1);
+}
+
+
+
+
 main :: proc() {
+	context = default_context();
+
 	glfw.Init();
 	defer glfw.Terminate();
 
