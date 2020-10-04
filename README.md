@@ -6,11 +6,12 @@ In the hyperbolic space, things can get pretty gnarly. Straight lines can appear
 
 At the edge of the ring is the infinite, and the infinite wraps back around at you.
 
+**WARNING:** This game can be disorienting due to the hyperbolic and psychedelic nature.
+
 ## Objective
 
 * Destroy as many blue enemies in hyperbolic space by shooting projectiles from your ship
 * Your ship has a green cannon attached which it will launch projectiles
-*
 
 ## Controls
 
