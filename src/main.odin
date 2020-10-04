@@ -250,14 +250,25 @@ update_game :: proc(window: glfw.Window_Handle, dt: f32) {
 				if b {
 					game_state = .Game;
 					start_new_game();
-					break;
+					return;
 				}
 			}
 		}
 	case .Paused:
 		return;
-	case .Game, .Death:
-		// Okay
+	case .Game:
+		// okay
+	case .Death:
+		// NOTE(bill): assume XBox controller
+		state: glfw.Gamepad_State;
+		glfw.GetGamepadState(0, &state);
+		for b in state.buttons {
+			if b {
+				game_state = .Game;
+				start_new_game();
+				return;
+			}
+		}
 	case:
 		return;
 	}
