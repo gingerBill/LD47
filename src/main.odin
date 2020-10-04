@@ -123,7 +123,7 @@ render_draw_list :: proc(window: glfw.Window_Handle, dl: ^Draw_List, w, h: f32) 
 }
 
 spawn_projectile :: proc(instant: bool) {
-	if len(projectiles) > 512 {
+	if len(projectiles) == cap(projectiles) {
 		return;
 	}
 	dt := curr_time - last_projectime_time;
@@ -651,7 +651,7 @@ main :: proc() {
 
 	glfw.MakeContextCurrent(window);
 
-	glfw.SwapInterval(1);
+	glfw.SwapInterval(0);
 
 	glfw.SetKeyCallback(window, key_callback);
 	glfw.SetFramebufferSizeCallback(window, framebuffer_size_callback);
