@@ -242,6 +242,7 @@ update_game :: proc(window: glfw.Window_Handle, dt: f32) {
 			for b in state.buttons {
 				if b {
 					game_state = .Game;
+					start_new_game();
 					break;
 				}
 			}
